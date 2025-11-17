@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+/* Tajawal Font Variables */
+@layer base {
+  :root {
+    --font-tajawal: 'Tajawal', sans-serif;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 20%;
+
+    --primary: 185 42% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 185 15% 92%;
+    --secondary-foreground: 185 42% 42%;
+
+    --muted: 185 15% 95%;
+    --muted-foreground: 185 10% 45%;
+
+    --accent: 185 35% 85%;
+    --accent-foreground: 185 42% 42%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 185 15% 90%;
+    --input: 185 15% 90%;
+    --ring: 185 42% 42%;
+
+    --radius: 1rem;
+    
+    --gradient-primary: linear-gradient(135deg, hsl(185 42% 42%) 0%, hsl(185 45% 35%) 100%);
+    --shadow-soft: 0 4px 20px -4px hsl(185 42% 42% / 0.15);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 185 50% 12%;
+    --foreground: 0 0% 98%;
+
+    --card: 185 45% 15%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 185 45% 15%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 185 42% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 185 30% 25%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 185 30% 20%;
+    --muted-foreground: 185 15% 65%;
+
+    --accent: 185 35% 30%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 185 30% 25%;
+    --input: 185 30% 25%;
+    --ring: 185 42% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    direction: rtl;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Tajawal', sans-serif;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Smooth scrolling for horizontal sliders */
+  .overflow-x-scroll,
+  .overflow-x-auto {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+
+  /* Ensure horizontal scroll works on touch devices */
+  .overflow-x-scroll {
+    scroll-snap-type: x proximity;
+  }
+
+  /* Swiper custom styles */
+  .swiper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide {
+    width: auto;
+  }
+
+  /* Hide swiper scrollbar */
+  .swiper-scrollbar {
+    display: none !important;
+  }
+
+  /* Smooth swiper transitions */
+  .swiper-wrapper {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer utilities {
+  /* Premium badge gradient animation */
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes shine {
+    0% {
+      transform: translateX(-100%) rotate(45deg);
+    }
+    100% {
+      transform: translateX(300%) rotate(45deg);
+    }
+  }
+
+  .animate-gradient {
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  .animate-shine::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    animation: shine 3s infinite;
+  }
+}
