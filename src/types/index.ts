@@ -80,7 +80,7 @@ export interface Subscription {
   daysRemaining: number; // Virtual field from backend
   isActive?: boolean; // Virtual field from backend
   // Legacy fields for backward compatibility
-  type?: "basic" | "premium";
+  type?: "basic" | "standard" | "premium";
   price?: string | number;
   totalDays?: number;
 }
@@ -103,13 +103,19 @@ export interface Package {
   id: string;
   _id: string;
   name: string;
+  nameEn?: string;
+  type?: "basic" | "standard" | "premium";
   price: string | number;
-  period: "شهر" | "سنة";
+  period: "شهر" | "سنة" | "3 أشهر";
+  periodArabic?: string;
   discount?: string;
+  discountPercentage?: number;
   features: string[];
   isActive?: boolean;
   durationDays?: number;
+  durationInDays?: number;
   currency?: string;
+  displayOrder?: number;
 }
 
 export interface PaymentMethod {
@@ -260,6 +266,7 @@ export interface Payment {
 export interface SubscriptionStats {
   totalActiveSubscriptions: number;
   basicSubscriptions: number;
+  standardSubscriptions: number;
   premiumSubscriptions: number;
   monthlyRecurringRevenue: number;
   annualRecurringRevenue: number;

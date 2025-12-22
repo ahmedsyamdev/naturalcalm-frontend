@@ -39,11 +39,18 @@ const Subscription = () => {
     return currencyMap[currency || 'SAR'] || 'ر.س';
   };
 
-  // Helper function to check if package is premium
-  const isPremiumPackage = (pkgName: string) => {
-    return pkgName?.toLowerCase().includes('premium') ||
-           pkgName?.toLowerCase().includes('بريميوم') ||
-           pkgName?.toLowerCase().includes('متميز');
+  // Helper function to check package type
+  const isPremiumPackage = (pkg: Package) => {
+    return pkg.type === 'premium' ||
+           pkg.name?.toLowerCase().includes('premium') ||
+           pkg.name?.toLowerCase().includes('بريميوم') ||
+           pkg.name?.toLowerCase().includes('متميز');
+  };
+
+  const isStandardPackage = (pkg: Package) => {
+    return pkg.type === 'standard' ||
+           pkg.name?.toLowerCase().includes('standard') ||
+           pkg.name?.toLowerCase().includes('قياسي');
   };
 
   // Calculate total days from package duration
@@ -184,7 +191,7 @@ const Subscription = () => {
           <h2 className="text-lg font-bold mb-4 text-right">الباقات</h2>
           {isLoadingPackages ? (
             <div className="space-y-4">
-              {[1, 2].map((i) => (
+              {[1, 2, 3].map((i) => (
                 <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden p-4 space-y-3">
                   <Skeleton className="h-8 w-full" />
                   <Skeleton className="h-12 w-full" />
@@ -198,7 +205,8 @@ const Subscription = () => {
                 const isCurrentPackage = currentSubscription &&
                   packageDetails &&
                   (packageDetails.id === pkg.id || packageDetails._id === pkg._id);
-                const isPremium = isPremiumPackage(pkg.name);
+                const isPremium = isPremiumPackage(pkg);
+                const isStandard = isStandardPackage(pkg);
 
                 return (
                   <div
@@ -206,11 +214,13 @@ const Subscription = () => {
                     className={`rounded-2xl shadow-md overflow-hidden relative transition-all duration-300 ${
                       isPremium
                         ? 'bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-white border-2 border-primary/30 hover:shadow-xl hover:scale-[1.02]'
-                        : 'bg-white hover:shadow-lg'
+                        : isStandard
+                          ? 'bg-gradient-to-br from-amber-500 via-amber-400 to-yellow-400 text-white border-2 border-amber-300/30 hover:shadow-xl hover:scale-[1.01]'
+                          : 'bg-white hover:shadow-lg'
                     }`}
                   >
-                    {/* Premium Sparkles Animation */}
-                    {isPremium && (
+                    {/* Sparkles Animation for Premium and Standard */}
+                    {(isPremium || isStandard) && (
                       <>
                         <div className="absolute top-3 left-3 animate-pulse">
                           <Sparkles className="w-5 h-5 text-white/80" />
@@ -232,58 +242,60 @@ const Subscription = () => {
                         <div className={`text-xs px-3 py-1.5 rounded-full font-medium ${
                           isPremium
                             ? 'bg-white/20 text-white backdrop-blur-sm'
-                            : pkg.discount
-                              ? 'bg-green-500 text-white'
-                              : 'bg-primary/10 text-primary'
+                            : isStandard
+                              ? 'bg-white/20 text-white backdrop-blur-sm'
+                              : pkg.discount
+                                ? 'bg-green-500 text-white'
+                                : 'bg-primary/10 text-primary'
                         }`}>
-                          {pkg.discount || (isPremium ? "الأكثر شعبية" : "العرض الأساسي")}
+                          {pkg.discount ? `خصم ${pkg.discountPercentage || pkg.discount}%` : (isPremium ? "الأكثر شعبية" : isStandard ? "الأفضل قيمة" : "العرض الأساسي")}
                         </div>
                         <div className="flex items-center gap-2">
-                          <h3 className={`font-bold text-lg ${isPremium ? 'text-white' : 'text-gray-900'}`}>
+                          <h3 className={`font-bold text-lg ${(isPremium || isStandard) ? 'text-white' : 'text-gray-900'}`}>
                             {pkg.name}
                           </h3>
-                          <span className="text-xl">{isPremium ? '✨' : '💎'}</span>
+                          <span className="text-xl">{isPremium ? '✨' : isStandard ? '⭐' : '💎'}</span>
                         </div>
                       </div>
 
-                      <div className={`h-px ${isPremium ? 'bg-white/30' : 'bg-border'}`} />
+                      <div className={`h-px ${(isPremium || isStandard) ? 'bg-white/30' : 'bg-border'}`} />
 
                       {/* Price & Duration */}
                       <div className="space-y-2">
                         <div className="flex items-baseline justify-end gap-2">
-                          <span className={`text-sm ${isPremium ? 'text-white/90' : 'text-muted-foreground'}`}>
-                            {pkg.period && `/ ${pkg.period}`}
+                          <span className={`text-sm ${(isPremium || isStandard) ? 'text-white/90' : 'text-muted-foreground'}`}>
+                            {(pkg.periodArabic || pkg.period) && `/ ${pkg.periodArabic || pkg.period}`}
                           </span>
-                          <p className={`text-3xl font-bold ${isPremium ? 'text-white' : 'text-primary'}`}>
+                          <p className={`text-3xl font-bold ${(isPremium || isStandard) ? 'text-white' : 'text-primary'}`}>
                             {typeof pkg.price === 'number' ? pkg.price : parseFloat(pkg.price as string)}
                           </p>
-                          <span className={`text-sm ${isPremium ? 'text-white/90' : 'text-muted-foreground'}`}>
+                          <span className={`text-sm ${(isPremium || isStandard) ? 'text-white/90' : 'text-muted-foreground'}`}>
                             {getCurrencySymbol(pkg.currency)}
                           </span>
                         </div>
-                        {pkg.durationDays && (
+                        {(pkg.durationDays || pkg.durationInDays) && (
                           <div className="flex items-center justify-end">
-                            <p className={`text-sm font-medium ${isPremium ? 'text-white/90' : 'text-muted-foreground'}`}>
-                              مدة الاشتراك: {pkg.durationDays} يوم
+                            <p className={`text-sm font-medium ${(isPremium || isStandard) ? 'text-white/90' : 'text-muted-foreground'}`}>
+                              مدة الاشتراك: {pkg.durationDays || pkg.durationInDays} يوم
                             </p>
                           </div>
                         )}
                       </div>
 
-                      <div className={`h-px ${isPremium ? 'bg-white/30' : 'bg-border'}`} />
+                      <div className={`h-px ${(isPremium || isStandard) ? 'bg-white/30' : 'bg-border'}`} />
 
                       {/* Features */}
                       {pkg.features && pkg.features.length > 0 && (
                         <div className="space-y-2.5">
                           {pkg.features.map((feature, idx) => (
                             <div key={idx} className="flex items-center gap-2 justify-end">
-                              <span className={`text-sm ${isPremium ? 'text-white' : 'text-gray-700'}`}>
+                              <span className={`text-sm ${(isPremium || isStandard) ? 'text-white' : 'text-gray-700'}`}>
                                 {feature}
                               </span>
                               <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                                isPremium ? 'bg-white/20 backdrop-blur-sm' : 'bg-green-500'
+                                (isPremium || isStandard) ? 'bg-white/20 backdrop-blur-sm' : 'bg-green-500'
                               }`}>
-                                <Check className={`w-3 h-3 ${isPremium ? 'text-white' : 'text-white'}`} />
+                                <Check className="w-3 h-3 text-white" />
                               </div>
                             </div>
                           ))}
@@ -297,7 +309,9 @@ const Subscription = () => {
                         className={`w-full rounded-full h-12 font-bold text-base transition-all ${
                           isPremium
                             ? 'bg-white hover:bg-white/90 text-primary shadow-lg hover:shadow-xl'
-                            : 'bg-primary hover:bg-primary/90 text-white'
+                            : isStandard
+                              ? 'bg-white hover:bg-white/90 text-amber-600 shadow-lg hover:shadow-xl'
+                              : 'bg-primary hover:bg-primary/90 text-white'
                         } disabled:opacity-50 disabled:cursor-not-allowed`}
                       >
                         {isCurrentPackage ? "مشترك حالياً" : "اشترك الان"}

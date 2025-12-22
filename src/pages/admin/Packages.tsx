@@ -52,10 +52,10 @@ export default function Packages() {
       </div>
 
       {/* Analytics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {statsLoading ? (
           <>
-            {[...Array(4)].map((_, i) => (
+            {[...Array(5)].map((_, i) => (
               <Card key={i} className="bg-white/40 backdrop-blur-md border-white/60 shadow-lg">
                 <CardHeader className="pb-3">
                   <Skeleton className="h-4 w-24" />
@@ -96,6 +96,22 @@ export default function Packages() {
               <CardContent>
                 <div className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'Tajawal' }}>
                   {stats.basicSubscriptions.toLocaleString('ar-EG')}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/40 backdrop-blur-md border-white/60 shadow-lg">
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm font-medium text-slate-600" style={{ fontFamily: 'Tajawal' }}>
+                    اشتراكات قياسية
+                  </CardTitle>
+                  <TrendingUp className="h-4 w-4 text-amber-500" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'Tajawal' }}>
+                  {(stats.standardSubscriptions || 0).toLocaleString('ar-EG')}
                 </div>
               </CardContent>
             </Card>
