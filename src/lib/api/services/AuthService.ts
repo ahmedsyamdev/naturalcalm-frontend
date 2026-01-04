@@ -39,7 +39,7 @@ class AuthServiceClass extends BaseService {
   }
 
   /**
-   * Login with phone and password
+   * Login with email and password
    */
   async login(data: LoginData): Promise<AuthResponse> {
     const response = await this.post<ApiResponse<AuthResponse>>(
@@ -56,12 +56,12 @@ class AuthServiceClass extends BaseService {
   }
 
   /**
-   * Send OTP to phone number
+   * Send OTP to email address
    */
-  async sendOTP(phone: string): Promise<OTPResponse> {
+  async sendOTP(email: string): Promise<OTPResponse> {
     const response = await this.post<ApiResponse<OTPResponse>>(
       '/auth/otp/send',
-      { phone }
+      { email }
     );
     return response.data;
   }
@@ -69,10 +69,10 @@ class AuthServiceClass extends BaseService {
   /**
    * Verify OTP code
    */
-  async verifyOTP(phone: string, code: string): Promise<AuthResponse> {
+  async verifyOTP(email: string, otp: string): Promise<AuthResponse> {
     const response = await this.post<ApiResponse<AuthResponse>>(
       '/auth/otp/verify',
-      { phone, otp: code }
+      { email, otp }
     );
 
     if (response.data.accessToken && response.data.refreshToken) {
@@ -103,21 +103,21 @@ class AuthServiceClass extends BaseService {
   /**
    * Request password reset
    */
-  async forgotPassword(phone: string): Promise<MessageResponse> {
+  async forgotPassword(email: string): Promise<MessageResponse> {
     const response = await this.post<ApiResponse<MessageResponse>>(
       '/auth/forgot-password',
-      { phone }
+      { email }
     );
     return response.data;
   }
 
   /**
-   * Reset password with token
+   * Reset password with OTP
    */
-  async resetPassword(token: string, newPassword: string): Promise<MessageResponse> {
+  async resetPassword(email: string, otp: string, newPassword: string): Promise<MessageResponse> {
     const response = await this.post<ApiResponse<MessageResponse>>(
       '/auth/reset-password',
-      { token, newPassword }
+      { email, otp, newPassword }
     );
     return response.data;
   }

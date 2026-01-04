@@ -10,40 +10,31 @@ import { Input } from "@/components/ui/input";
 import { ArrowRight, Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";
 import AuthService from "@/lib/api/services/AuthService";
-import { validatePhone, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
+import { validateEmail, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
 import { ApiError } from "@/lib/api/types";
-import { CountrySelector } from "@/components/CountrySelector";
-import { Country, DEFAULT_COUNTRY } from "@/lib/countries";
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [selectedCountry, setSelectedCountry] = useState<Country>(DEFAULT_COUNTRY);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSendReset = async () => {
-    if (!phoneNumber) {
-      toast.error("الرجاء إدخال رقم الهاتف");
+    if (!email) {
+      toast.error("الرجاء إدخال البريد الإلكتروني");
       return;
     }
 
-    if (!validatePhone(phoneNumber)) {
-      toast.error(VALIDATION_MESSAGES.INVALID_PHONE);
+    if (!validateEmail(email)) {
+      toast.error(VALIDATION_MESSAGES.INVALID_EMAIL);
       return;
     }
 
     try {
       setIsLoading(true);
 
-      // Remove leading zero from phone number for international format
-      const cleanPhoneNumber = phoneNumber.startsWith('0')
-        ? phoneNumber.substring(1)
-        : phoneNumber;
-      const fullPhoneNumber = `${selectedCountry.dialCode}${cleanPhoneNumber}`;
-
-      await AuthService.forgotPassword(fullPhoneNumber);
-      toast.success("تم إرسال رمز التحقق إلى هاتفك");
-      navigate("/reset-password", { state: { phone: fullPhoneNumber } });
+      await AuthService.forgotPassword(email);
+      toast.success("تم إرسال رمز التحقق إلى بريدك الإلكتروني");
+      navigate("/reset-password", { state: { email } });
     } catch (error) {
       const apiError = error as ApiError;
       const errorMessage = getAuthErrorMessage(
@@ -79,25 +70,19 @@ const ForgotPassword = () => {
               نسيت كلمة المرور؟
             </h1>
             <p className="text-muted-foreground">
-              أدخل رقم هاتفك وسنرسل لك رمز التحقق لإعادة تعيين كلمة المرور
+              أدخل بريدك الإلكتروني وسنرسل لك رمز التحقق لإعادة تعيين كلمة المرور
             </p>
           </div>
 
           <div className="space-y-6">
             <div className="space-y-2">
-              <div className="flex gap-2">
-                <CountrySelector
-                  selectedCountry={selectedCountry}
-                  onSelectCountry={setSelectedCountry}
-                />
-                <Input
-                  type="tel"
-                  placeholder="رقم الهاتف"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="flex-1 rounded-full h-14 px-6 text-right bg-white border-border shadow-sm"
-                />
-              </div>
+              <Input
+                type="email"
+                placeholder="البريد الإلكتروني"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="rounded-full h-14 px-6 text-right bg-white border-border shadow-sm"
+              />
             </div>
 
             <Button

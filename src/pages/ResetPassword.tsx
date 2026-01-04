@@ -3,7 +3,7 @@
  * Allows users to reset their password with a verification code
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ import { ApiError } from "@/lib/api/types";
 const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const phone = location.state?.phone;
+  const email = location.state?.email;
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,6 +26,13 @@ const ResetPassword = () => {
     newPassword: "",
     confirmPassword: ""
   });
+
+  useEffect(() => {
+    if (!email) {
+      toast.error("لم يتم العثور على البريد الإلكتروني");
+      navigate("/forgot-password");
+    }
+  }, [email, navigate]);
 
   const passwordValidation = validatePassword(formData.newPassword);
   const passwordsMatch = formData.newPassword === formData.confirmPassword;
@@ -48,7 +55,7 @@ const ResetPassword = () => {
 
     try {
       setIsLoading(true);
-      await AuthService.resetPassword(formData.verificationCode, formData.newPassword);
+      await AuthService.resetPassword(email, formData.verificationCode, formData.newPassword);
       toast.success("تم تغيير كلمة المرور بنجاح");
       navigate("/login");
     } catch (error) {

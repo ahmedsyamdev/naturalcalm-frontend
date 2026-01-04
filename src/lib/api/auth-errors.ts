@@ -5,14 +5,14 @@
 
 export const AUTH_ERROR_MESSAGES: Record<string, string> = {
   // Login errors
-  INVALID_CREDENTIALS: 'رقم الهاتف أو كلمة المرور غير صحيحة',
-  USER_NOT_FOUND: 'لا يوجد مستخدم بهذا الرقم',
+  INVALID_CREDENTIALS: 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+  USER_NOT_FOUND: 'لا يوجد مستخدم بهذا البريد الإلكتروني',
   ACCOUNT_DISABLED: 'تم تعطيل حسابك. يرجى التواصل مع الدعم',
 
   // Registration errors
-  PHONE_ALREADY_EXISTS: 'رقم الهاتف مسجل مسبقاً',
-  INVALID_PHONE_FORMAT: 'تنسيق رقم الهاتف غير صحيح',
-  WEAK_PASSWORD: 'كلمة المرور ضعيفة. يجب أن تحتوي على 8 أحرف على الأقل',
+  EMAIL_ALREADY_EXISTS: 'البريد الإلكتروني مسجل مسبقاً',
+  INVALID_EMAIL_FORMAT: 'تنسيق البريد الإلكتروني غير صحيح',
+  WEAK_PASSWORD: 'كلمة المرور ضعيفة. يجب أن تحتوي على 6 أحرف على الأقل',
   INVALID_INVITATION_CODE: 'رمز الدعوة غير صحيح',
 
   // OTP errors
@@ -45,7 +45,7 @@ export const VALIDATION_MESSAGES = {
   REQUIRED_FIELD: 'هذا الحقل مطلوب',
   INVALID_PHONE: 'رقم الهاتف غير صحيح',
   INVALID_EMAIL: 'البريد الإلكتروني غير صحيح',
-  PASSWORD_TOO_SHORT: 'كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل',
+  PASSWORD_TOO_SHORT: 'كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل',
   PASSWORD_MISMATCH: 'كلمة المرور غير متطابقة',
   INVALID_OTP_LENGTH: 'الرمز يجب أن يحتوي على 6 أرقام',
 };
@@ -59,6 +59,14 @@ export function getAuthErrorMessage(errorCode?: string, defaultMessage?: string)
   }
 
   return AUTH_ERROR_MESSAGES[errorCode] || defaultMessage || AUTH_ERROR_MESSAGES.UNKNOWN_ERROR;
+}
+
+/**
+ * Validates email format
+ */
+export function validateEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 }
 
 /**
@@ -79,7 +87,7 @@ export function validatePassword(password: string): {
   isValid: boolean;
   message?: string;
 } {
-  if (password.length < 8) {
+  if (password.length < 6) {
     return {
       isValid: false,
       message: VALIDATION_MESSAGES.PASSWORD_TOO_SHORT,

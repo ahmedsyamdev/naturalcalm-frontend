@@ -5,33 +5,30 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Apple, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { validatePhone, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
+import { validateEmail, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
 import { ApiError } from "@/lib/api/types";
-import { CountrySelector } from "@/components/CountrySelector";
-import { Country, DEFAULT_COUNTRY } from "@/lib/countries";
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<Country>(DEFAULT_COUNTRY);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (!phoneNumber || !password) {
+    if (!email || !password) {
       toast.error("الرجاء إدخال جميع الحقول");
       return;
     }
 
-    if (!validatePhone(phoneNumber)) {
-      toast.error(VALIDATION_MESSAGES.INVALID_PHONE);
+    if (!validateEmail(email)) {
+      toast.error(VALIDATION_MESSAGES.INVALID_EMAIL);
       return;
     }
 
-    if (password.length < 8) {
+    if (password.length < 6) {
       toast.error(VALIDATION_MESSAGES.PASSWORD_TOO_SHORT);
       return;
     }
@@ -39,14 +36,8 @@ const Login = () => {
     try {
       setIsLoading(true);
 
-      // Remove leading zero from phone number for international format
-      const cleanPhoneNumber = phoneNumber.startsWith('0')
-        ? phoneNumber.substring(1)
-        : phoneNumber;
-      const fullPhoneNumber = `${selectedCountry.dialCode}${cleanPhoneNumber}`;
-
       await login({
-        phone: fullPhoneNumber,
+        email,
         password,
         rememberMe
       });
@@ -72,7 +63,7 @@ const Login = () => {
   return (
     <div className="min-h-screen relative overflow-hidden" dir="rtl">
       {/* Background Image with Overlay */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: 'url("https://images.unsplash.com/photo-1545389336-cf090694435e?w=800&auto=format&fit=crop")',
@@ -91,21 +82,15 @@ const Login = () => {
               <p className="text-muted-foreground">سجل الدخول الى حسابك</p>
             </div>
 
-            {/* Phone Input */}
+            {/* Email Input */}
             <div className="space-y-2">
-              <div className="flex gap-2">
-                <CountrySelector
-                  selectedCountry={selectedCountry}
-                  onSelectCountry={setSelectedCountry}
-                />
-                <Input
-                  type="tel"
-                  placeholder="رقم الهاتف"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="flex-1 rounded-full h-14 px-6 text-right bg-white border-border shadow-sm"
-                />
-              </div>
+              <Input
+                type="email"
+                placeholder="البريد الإلكتروني"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="rounded-full h-14 px-6 text-right bg-white border-border shadow-sm"
+              />
             </div>
 
             {/* Password Input */}
@@ -208,7 +193,7 @@ const Login = () => {
             {/* Sign Up Link */}
             <div className="text-center text-sm">
               <span className="text-muted-foreground">ليس لديك حساب؟ </span>
-              <button 
+              <button
                 onClick={() => navigate("/signup")}
                 className="text-primary font-medium hover:underline"
               >

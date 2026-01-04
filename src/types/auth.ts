@@ -7,13 +7,12 @@ import { User } from './index';
 
 export interface RegisterData {
   name: string;
-  phone: string;
+  email: string;
   password: string;
-  invitationCode?: string;
 }
 
 export interface LoginData {
-  phone: string;
+  email: string;
   password: string;
   rememberMe?: boolean;
 }
@@ -50,15 +49,16 @@ export interface SocialLoginData {
 }
 
 export interface ForgotPasswordData {
-  phone: string;
+  email: string;
 }
 
 export interface ResetPasswordData {
-  token: string;
+  email: string;
+  otp: string;
   newPassword: string;
 }
 
 export interface VerifyOTPData {
-  phone: string;
-  code: string;
+  email: string;
+  otp: string;
 }

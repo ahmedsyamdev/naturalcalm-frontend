@@ -5,33 +5,29 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, Apple, Loader2, Check, X } from "lucide-react";
 import { toast } from "sonner";
 import AuthService from "@/lib/api/services/AuthService";
-import { validatePhone, validatePassword, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
+import { validateEmail, validatePassword, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
 import { ApiError } from "@/lib/api/types";
-import { CountrySelector } from "@/components/CountrySelector";
-import { Country, DEFAULT_COUNTRY } from "@/lib/countries";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<Country>(DEFAULT_COUNTRY);
   const [formData, setFormData] = useState({
     name: "",
-    phoneNumber: "",
-    password: "",
-    inviteCode: ""
+    email: "",
+    password: ""
   });
 
   const passwordValidation = validatePassword(formData.password);
 
   const handleSignup = async () => {
-    if (!formData.name || !formData.phoneNumber || !formData.password) {
+    if (!formData.name || !formData.email || !formData.password) {
       toast.error("الرجاء إدخال جميع الحقول المطلوبة");
       return;
     }
 
-    if (!validatePhone(formData.phoneNumber)) {
-      toast.error(VALIDATION_MESSAGES.INVALID_PHONE);
+    if (!validateEmail(formData.email)) {
+      toast.error(VALIDATION_MESSAGES.INVALID_EMAIL);
       return;
     }
 
@@ -43,21 +39,14 @@ const Signup = () => {
     try {
       setIsLoading(true);
 
-      // Remove leading zero from phone number for international format
-      const cleanPhoneNumber = formData.phoneNumber.startsWith('0')
-        ? formData.phoneNumber.substring(1)
-        : formData.phoneNumber;
-      const fullPhoneNumber = `${selectedCountry.dialCode}${cleanPhoneNumber}`;
-
       await AuthService.register({
         name: formData.name,
-        phone: fullPhoneNumber,
-        password: formData.password,
-        invitationCode: formData.inviteCode || undefined
+        email: formData.email,
+        password: formData.password
       });
 
-      toast.success("تم إنشاء الحساب بنجاح. سنرسل لك رمز التحقق");
-      navigate("/otp", { state: { phone: fullPhoneNumber } });
+      toast.success("تم إنشاء الحساب بنجاح. سنرسل لك رمز التحقق على بريدك الإلكتروني");
+      navigate("/otp", { state: { email: formData.email } });
     } catch (error) {
       const apiError = error as ApiError;
       const errorMessage = getAuthErrorMessage(
@@ -77,7 +66,7 @@ const Signup = () => {
   return (
     <div className="min-h-screen relative overflow-hidden" dir="rtl">
       {/* Background Image with Overlay */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: 'url("https://images.unsplash.com/photo-1545389336-cf090694435e?w=800&auto=format&fit=crop")',
@@ -111,21 +100,15 @@ const Signup = () => {
               />
             </div>
 
-            {/* Phone Input */}
+            {/* Email Input */}
             <div className="space-y-2">
-              <div className="flex gap-2">
-                <CountrySelector
-                  selectedCountry={selectedCountry}
-                  onSelectCountry={setSelectedCountry}
-                />
-                <Input
-                  type="tel"
-                  placeholder="رقم الهاتف"
-                  value={formData.phoneNumber}
-                  onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})}
-                  className="flex-1 rounded-full h-14 px-6 text-right bg-white border-border shadow-sm"
-                />
-              </div>
+              <Input
+                type="email"
+                placeholder="البريد الإلكتروني"
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                className="rounded-full h-14 px-6 text-right bg-white border-border shadow-sm"
+              />
             </div>
 
             {/* Password Input */}
@@ -158,17 +141,6 @@ const Signup = () => {
                   </span>
                 </div>
               )}
-            </div>
-
-            {/* Invitation Code Input */}
-            <div className="space-y-2">
-              <Input
-                type="text"
-                placeholder="كود الدعوة (اختياري)"
-                value={formData.inviteCode}
-                onChange={(e) => setFormData({...formData, inviteCode: e.target.value})}
-                className="rounded-full h-14 px-6 text-right bg-white border-border shadow-sm"
-              />
             </div>
 
             {/* Signup Button */}
@@ -227,8 +199,8 @@ const Signup = () => {
 
             {/* Login Link */}
             <div className="text-center text-sm">
-              <span className="text-muted-foreground">ليس لديك حساب؟ </span>
-              <button 
+              <span className="text-muted-foreground">لديك حساب؟ </span>
+              <button
                 onClick={() => navigate("/login")}
                 className="text-primary font-medium hover:underline"
               >

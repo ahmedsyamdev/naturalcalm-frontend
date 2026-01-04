@@ -17,15 +17,15 @@ const OtpVerification = () => {
   const [timer, setTimer] = useState(60);
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
-  const phone = location.state?.phone;
+  const email = location.state?.email;
 
   useEffect(() => {
-    if (!phone) {
-      toast.error("لم يتم العثور على رقم الهاتف");
+    if (!email) {
+      toast.error("لم يتم العثور على البريد الإلكتروني");
       navigate("/login");
       return;
     }
-  }, [phone, navigate]);
+  }, [email, navigate]);
 
   useEffect(() => {
     if (timer === 0) return;
@@ -76,7 +76,7 @@ const OtpVerification = () => {
 
     try {
       setIsLoading(true);
-      const response = await AuthService.verifyOTP(phone, otpValue);
+      const response = await AuthService.verifyOTP(email, otpValue);
 
       updateUser(response.user);
       toast.success("تم التحقق بنجاح");
@@ -108,7 +108,7 @@ const OtpVerification = () => {
 
     try {
       setIsResending(true);
-      await AuthService.sendOTP(phone);
+      await AuthService.sendOTP(email);
       setTimer(60);
       setOtp(["", "", "", "", "", ""]);
       toast.success("تم إعادة إرسال الرمز");
@@ -141,13 +141,13 @@ const OtpVerification = () => {
         {/* Title */}
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold text-foreground">
-            ادخل رمز المصادقة المرسل الى رقم هاتفك
+            ادخل رمز المصادقة المرسل الى بريدك الإلكتروني
           </h1>
           <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">المحمول 📱</span>
+            <span className="font-medium text-foreground">البريد الإلكتروني 📧</span>
           </p>
           <p className="text-xs text-muted-foreground mt-2">
-            ادخل رمز التحقق المرسل إلى هاتفك.
+            ادخل رمز التحقق المرسل إلى بريدك الإلكتروني.
           </p>
         </div>
 
