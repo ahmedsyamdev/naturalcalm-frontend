@@ -157,6 +157,14 @@ class AuthServiceClass extends BaseService {
     const response = await this.get<ApiResponse<{ user: User }>>('/users/me');
     return response.data.user;
   }
+
+  /**
+   * Delete user account permanently
+   */
+  async deleteAccount(): Promise<void> {
+    await this.delete('/users/me');
+    clearTokens();
+  }
 }
 
 export const AuthService = new AuthServiceClass();

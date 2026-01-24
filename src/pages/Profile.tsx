@@ -4,7 +4,7 @@
  */
 
 import { useState } from "react";
-import { ArrowRight, Bell, Heart, UserPen, Smartphone, LogOut, Trash2, Download } from "lucide-react";
+import { ArrowRight, Bell, Heart, UserPen, Smartphone, LogOut, Trash2, Download, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell } from "recharts";
 import { Button } from "@/components/ui/button";
@@ -30,12 +30,15 @@ import BottomNav from "@/components/BottomNav";
 import { EditProfileDialog } from "@/components/EditProfileDialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStats, useWeeklyStats } from "@/hooks/queries/useStats";
+import { AuthService } from "@/lib/api/services/AuthService";
 import { toast } from "sonner";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showAboutDialog, setShowAboutDialog] = useState(false);
   const [showHelpDialog, setShowHelpDialog] = useState(false);
@@ -93,11 +96,26 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      await AuthService.deleteAccount();
+      toast.success("تم حذف حسابك بنجاح");
+      navigate("/login");
+    } catch (error) {
+      console.error("Delete account error:", error);
+      toast.error("حدث خطأ أثناء حذف الحساب");
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
+    }
+  };
+
   const dangerItems = [
     {
       icon: <Trash2 className="w-6 h-6" />,
-      label: "حذف الحساب (قريباً)",
-      onClick: () => toast.error("هذه الميزة غير متوفرة حالياً"),
+      label: "حذف الحساب",
+      onClick: () => setShowDeleteDialog(true),
     },
     {
       icon: <LogOut className="w-6 h-6" />,
@@ -353,6 +371,37 @@ const Profile = () => {
               تسجيل الخروج
             </AlertDialogAction>
             <AlertDialogCancel>إلغاء</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>حذف الحساب</AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              <p>هل أنت متأكد من رغبتك في حذف حسابك؟</p>
+              <p className="font-semibold text-red-600">
+                هذا الإجراء نهائي ولا يمكن التراجع عنه. سيتم حذف جميع بياناتك بشكل دائم.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row-reverse gap-2">
+            <AlertDialogAction
+              onClick={handleDeleteAccount}
+              className="bg-red-600 hover:bg-red-700"
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                  جاري الحذف...
+                </>
+              ) : (
+                "حذف الحساب نهائياً"
+              )}
+            </AlertDialogAction>
+            <AlertDialogCancel disabled={isDeleting}>إلغاء</AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
