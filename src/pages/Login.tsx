@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,22 +18,7 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { initializeGoogle, isLoading: googleLoading, clientId } = useGoogleAuth();
-
-  useEffect(() => {
-    if (clientId) {
-      initializeGoogle(
-        async () => {
-          toast.success("تم تسجيل الدخول بنجاح");
-          await refreshUser();
-          navigate("/home");
-        },
-        (error) => {
-          toast.error(error);
-        }
-      );
-    }
-  }, [clientId, initializeGoogle, navigate, refreshUser]);
+  const { signInWithGoogle, isLoading: googleLoading } = useGoogleAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -75,14 +60,16 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    if (!clientId) {
-      toast.error("تسجيل الدخول عبر جوجل غير متاح حالياً");
-      return;
-    }
-    // Trigger Google One Tap
-    if (window.google) {
-      window.google.accounts.id.prompt();
-    }
+    signInWithGoogle(
+      async () => {
+        toast.success("تم تسجيل الدخول بنجاح");
+        await refreshUser();
+        navigate("/home");
+      },
+      (error) => {
+        toast.error(error);
+      }
+    );
   };
 
   return (
