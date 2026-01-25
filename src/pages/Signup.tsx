@@ -8,11 +8,9 @@ import AuthService from "@/lib/api/services/AuthService";
 import { validateEmail, validatePassword, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
 import { ApiError } from "@/lib/api/types";
 import { useGoogleAuth } from "@/hooks/useGoogleAuth";
-import { useAuth } from "@/contexts/AuthContext";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const { refreshUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -65,16 +63,7 @@ const Signup = () => {
   };
 
   const handleGoogleLogin = () => {
-    signInWithGoogle(
-      async () => {
-        toast.success("تم إنشاء الحساب بنجاح");
-        await refreshUser();
-        navigate("/home");
-      },
-      (error) => {
-        toast.error(error);
-      }
-    );
+    signInWithGoogle();
   };
 
   return (

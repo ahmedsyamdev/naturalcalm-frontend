@@ -11,7 +11,7 @@ import { useGoogleAuth } from "@/hooks/useGoogleAuth";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, refreshUser } = useAuth();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,16 +60,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = () => {
-    signInWithGoogle(
-      async () => {
-        toast.success("تم تسجيل الدخول بنجاح");
-        await refreshUser();
-        navigate("/home");
-      },
-      (error) => {
-        toast.error(error);
-      }
-    );
+    signInWithGoogle();
   };
 
   return (

@@ -31,6 +31,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ListeningHistory from "./pages/ListeningHistory";
 import Downloads from "./pages/Downloads";
+import GoogleCallback from "./pages/GoogleCallback";
 
 import { AdminProtectedRoute } from "./components/admin/AdminProtectedRoute";
 import { AdminLayout } from "./layouts/AdminLayout";
@@ -77,6 +78,7 @@ const App = () => (
                 <Route path="/otp" element={<OtpVerification />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/auth/google/callback" element={<GoogleCallback />} />
 
                 <Route element={<ProtectedRoute />}>
                   <Route path="/onboarding" element={<Onboarding />} />
