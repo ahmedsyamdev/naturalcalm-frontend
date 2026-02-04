@@ -1,6 +1,7 @@
 /**
  * Token Management Utilities
- * Handles authentication token storage and retrieval with Remember Me support
+ * Handles authentication token storage and retrieval
+ * Always uses localStorage for mobile WebView compatibility
  */
 
 const AUTH_TOKEN_KEY = 'authToken';
@@ -8,13 +9,11 @@ const REFRESH_TOKEN_KEY = 'refreshToken';
 const REMEMBER_ME_KEY = 'rememberMe';
 
 /**
- * Gets the appropriate storage based on Remember Me preference
- * If Remember Me is enabled, use localStorage (persists across browser sessions)
- * If not, use sessionStorage (cleared when browser/tab is closed)
+ * Gets storage - always uses localStorage for WebView compatibility
+ * WebViews clear sessionStorage when the app is closed, so we must use localStorage
  */
 function getStorage(): Storage {
-  const rememberMe = localStorage.getItem(REMEMBER_ME_KEY) === 'true';
-  return rememberMe ? localStorage : sessionStorage;
+  return localStorage;
 }
 
 /**
