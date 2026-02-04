@@ -9,17 +9,10 @@ import { User } from '@/types';
 import { AdminUser } from '@/types/admin';
 import { LoginData, RegisterData } from '@/types/auth';
 import AuthService from '@/lib/api/services/AuthService';
-import { getAuthToken, clearTokens, setRememberMe, getRememberMe } from '@/lib/api/tokens';
+import { getAuthToken, clearTokens } from '@/lib/api/tokens';
 import { FavoritesService } from '@/lib/api/services/FavoritesService';
 
 const USER_DATA_KEY = 'userData';
-
-/**
- * Gets the appropriate storage for user data based on Remember Me preference
- */
-function getUserStorage(): Storage {
-  return getRememberMe() ? localStorage : sessionStorage;
-}
 
 interface AuthContextType {
   user: (User & Partial<AdminUser>) | null;
@@ -73,9 +66,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(currentUser);
       setIsAuthenticated(true);
 
-      // Save to appropriate storage based on Remember Me preference
-      const storage = getUserStorage();
-      storage.setItem(USER_DATA_KEY, JSON.stringify(currentUser));
+      // Save to localStorage for WebView persistence
+      localStorage.setItem(USER_DATA_KEY, JSON.stringify(currentUser));
     } catch (error) {
       console.error('Failed to initialize auth:', error);
       clearTokens();
@@ -89,17 +81,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const login = async (data: LoginData) => {
-    // Set Remember Me preference BEFORE calling AuthService
-    // This ensures tokens are saved to the correct storage
-    setRememberMe(data.rememberMe || false);
-
     const response = await AuthService.login(data);
     setUser(response.user);
     setIsAuthenticated(true);
 
-    // Save user data to appropriate storage based on Remember Me preference
-    const storage = getUserStorage();
-    storage.setItem(USER_DATA_KEY, JSON.stringify(response.user));
+    // Save to localStorage for WebView persistence
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(response.user));
 
     // Prefetch favorites after successful login
     queryClient.prefetchQuery({
@@ -113,15 +100,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const register = async (data: RegisterData) => {
-    // For registration, default to Remember Me = false (require explicit login with Remember Me)
-    setRememberMe(false);
-
     const response = await AuthService.register(data);
     setUser(response.user);
     setIsAuthenticated(true);
 
-    // Save to sessionStorage for new registrations
-    sessionStorage.setItem(USER_DATA_KEY, JSON.stringify(response.user));
+    // Save to localStorage for WebView persistence
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(response.user));
   };
 
   const logout = async () => {
@@ -145,18 +129,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const updateUser = (updatedUser: User) => {
     setUser(updatedUser);
-    // Update in the appropriate storage based on Remember Me preference
-    const storage = getUserStorage();
-    storage.setItem(USER_DATA_KEY, JSON.stringify(updatedUser));
+    // Save to localStorage for WebView persistence
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(updatedUser));
   };
 
   const refreshUser = async () => {
     try {
       const currentUser = await AuthService.getCurrentUser();
       setUser(currentUser);
-      // Save to appropriate storage based on Remember Me preference
-      const storage = getUserStorage();
-      storage.setItem(USER_DATA_KEY, JSON.stringify(currentUser));
+      // Save to localStorage for WebView persistence
+      localStorage.setItem(USER_DATA_KEY, JSON.stringify(currentUser));
     } catch (error) {
       console.error('Failed to refresh user:', error);
       throw error;
