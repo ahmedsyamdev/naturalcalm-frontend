@@ -54,8 +54,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return;
       }
 
-      // Check both storages for user data
-      const storedUser = sessionStorage.getItem(USER_DATA_KEY) || localStorage.getItem(USER_DATA_KEY);
+      // Check localStorage for user data
+      const storedUser = localStorage.getItem(USER_DATA_KEY);
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
@@ -72,7 +72,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error('Failed to initialize auth:', error);
       clearTokens();
       localStorage.removeItem(USER_DATA_KEY);
-      sessionStorage.removeItem(USER_DATA_KEY);
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -115,9 +114,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.error('Logout error:', error);
     } finally {
       clearTokens();
-      // Clear user data from both storages
       localStorage.removeItem(USER_DATA_KEY);
-      sessionStorage.removeItem(USER_DATA_KEY);
       setUser(null);
       setIsAuthenticated(false);
 

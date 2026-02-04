@@ -43,11 +43,10 @@ export function setAuthToken(token: string): void {
 }
 
 /**
- * Gets the authentication token from either storage
+ * Gets the authentication token
  */
 export function getAuthToken(): string | null {
-  // Check both storages (for backwards compatibility and migration)
-  return sessionStorage.getItem(AUTH_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
+  return localStorage.getItem(AUTH_TOKEN_KEY);
 }
 
 /**
@@ -59,21 +58,18 @@ export function setRefreshToken(token: string): void {
 }
 
 /**
- * Gets the refresh token from either storage
+ * Gets the refresh token
  */
 export function getRefreshToken(): string | null {
-  // Check both storages (for backwards compatibility and migration)
-  return sessionStorage.getItem(REFRESH_TOKEN_KEY) || localStorage.getItem(REFRESH_TOKEN_KEY);
+  return localStorage.getItem(REFRESH_TOKEN_KEY);
 }
 
 /**
- * Clears all authentication tokens from both storages
+ * Clears all authentication tokens
  */
 export function clearTokens(): void {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
-  sessionStorage.removeItem(AUTH_TOKEN_KEY);
-  sessionStorage.removeItem(REFRESH_TOKEN_KEY);
   localStorage.removeItem(REMEMBER_ME_KEY);
 }
 
