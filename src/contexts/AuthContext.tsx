@@ -60,13 +60,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
         setIsAuthenticated(true);
+        setIsLoading(false);
+
+        // Try to refresh user data in the background (don't logout on failure)
+        try {
+          const currentUser = await AuthService.getCurrentUser();
+          setUser(currentUser);
+          localStorage.setItem(USER_DATA_KEY, JSON.stringify(currentUser));
+        } catch (refreshError) {
+          console.warn('Failed to refresh user data:', refreshError);
+          // Don't logout - keep using cached user data
+        }
+        return;
       }
 
+      // No stored user - must fetch from API
       const currentUser = await AuthService.getCurrentUser();
       setUser(currentUser);
       setIsAuthenticated(true);
-
-      // Save to localStorage for WebView persistence
       localStorage.setItem(USER_DATA_KEY, JSON.stringify(currentUser));
     } catch (error) {
       console.error('Failed to initialize auth:', error);
