@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import splashLogo from "@/assets/N.C-con2.png";
+import { getAuthToken } from "@/lib/api/tokens";
 
 const Splash = () => {
   const navigate = useNavigate();
@@ -12,7 +13,13 @@ const Splash = () => {
     }, 2000);
 
     const navTimer = setTimeout(() => {
-      navigate("/login");
+      // Check if user is already logged in
+      const token = getAuthToken();
+      if (token) {
+        navigate("/home");
+      } else {
+        navigate("/login");
+      }
     }, 2500);
 
     return () => {
