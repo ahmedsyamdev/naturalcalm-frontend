@@ -17,7 +17,8 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!email || !password) {
       toast.error("الرجاء إدخال جميع الحقول");
       return;
@@ -71,7 +72,7 @@ const Login = () => {
       {/* Content */}
       <div className="relative z-10 flex flex-col min-h-screen">
         <div className="flex-1 flex items-end pb-8">
-          <div className="w-full px-6 space-y-6">
+          <form onSubmit={handleLogin} className="w-full px-6 space-y-6">
             {/* Welcome Text */}
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-foreground mb-2">اهلا بك مجددا</h1>
@@ -134,9 +135,9 @@ const Login = () => {
 
             {/* Login Button */}
             <Button
+              type="submit"
               variant="auth"
               className="w-full"
-              onClick={handleLogin}
               disabled={isLoading}
             >
               {isLoading ? (
@@ -153,13 +154,14 @@ const Login = () => {
             <div className="text-center text-sm">
               <span className="text-muted-foreground">ليس لديك حساب؟ </span>
               <button
+                type="button"
                 onClick={() => navigate("/signup")}
                 className="text-primary font-medium hover:underline"
               >
                 انشاء حساب
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

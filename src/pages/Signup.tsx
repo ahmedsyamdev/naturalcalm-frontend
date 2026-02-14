@@ -20,7 +20,8 @@ const Signup = () => {
 
   const passwordValidation = validatePassword(formData.password);
 
-  const handleSignup = async () => {
+  const handleSignup = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!formData.name || !formData.email || !formData.password) {
       toast.error("الرجاء إدخال جميع الحقول المطلوبة");
       return;
@@ -74,7 +75,7 @@ const Signup = () => {
       {/* Content */}
       <div className="relative z-10 flex flex-col min-h-screen">
         <div className="flex-1 flex items-end pb-8">
-          <div className="w-full px-6 space-y-5">
+          <form onSubmit={handleSignup} className="w-full px-6 space-y-5">
             {/* Welcome Text */}
             <div className="text-center mb-6">
               <h1 className="text-3xl font-bold text-foreground mb-2">انضم الينا</h1>
@@ -141,9 +142,9 @@ const Signup = () => {
 
             {/* Signup Button */}
             <Button
+              type="submit"
               variant="auth"
               className="w-full"
-              onClick={handleSignup}
               disabled={isLoading}
             >
               {isLoading ? (
@@ -160,13 +161,14 @@ const Signup = () => {
             <div className="text-center text-sm">
               <span className="text-muted-foreground">لديك حساب؟ </span>
               <button
+                type="button"
                 onClick={() => navigate("/login")}
                 className="text-primary font-medium hover:underline"
               >
                 تسجيل الدخول
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
