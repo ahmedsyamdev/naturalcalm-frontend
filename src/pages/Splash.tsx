@@ -16,9 +16,9 @@ const Splash = () => {
       // Check if user is already logged in
       const token = getAuthToken();
       if (token) {
-        navigate("/home");
+        window.location.href = "/home";
       } else {
-        navigate("/login");
+        window.location.href = "/login";
       }
     }, 2500);
 

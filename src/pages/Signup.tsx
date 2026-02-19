@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,9 +7,17 @@ import { toast } from "sonner";
 import AuthService from "@/lib/api/services/AuthService";
 import { validateEmail, validatePassword, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
 import { ApiError } from "@/lib/api/types";
+import { getAuthToken } from "@/lib/api/tokens";
 
 const Signup = () => {
   const navigate = useNavigate();
+
+  // Redirect to home if already logged in
+  useEffect(() => {
+    if (getAuthToken()) {
+      window.location.href = "/home";
+    }
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,10 +7,18 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { validateEmail, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
 import { ApiError } from "@/lib/api/types";
+import { getAuthToken } from "@/lib/api/tokens";
 
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  // Redirect to home if already logged in
+  useEffect(() => {
+    if (getAuthToken()) {
+      window.location.href = "/home";
+    }
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,7 +52,7 @@ const Login = () => {
       });
 
       toast.success("تم تسجيل الدخول بنجاح");
-      navigate("/home");
+      window.location.href = "/home";
     } catch (error) {
       const apiError = error as ApiError;
       const errorMessage = getAuthErrorMessage(
