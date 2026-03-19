@@ -35,7 +35,7 @@ const ApplePayForm = ({ packageInfo, couponCode, amount, onSuccess, onError }: A
     }
 
     const pr = stripe.paymentRequest({
-      country: 'SA',
+      country: 'US',
       currency: 'usd',
       total: {
         label: packageInfo.name,

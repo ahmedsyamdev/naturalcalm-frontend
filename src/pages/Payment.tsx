@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import BottomNav from "@/components/BottomNav";
 import { Package } from "@/types";
 import { useValidateCoupon } from "@/hooks/queries/usePayment";
 import { usePackages } from "@/hooks/queries/useSubscription";
@@ -116,7 +115,7 @@ const Payment = () => {
           <h2 className="text-lg font-bold mb-3 text-right">الباقة المختارة</h2>
           <div className="bg-white rounded-2xl p-4 shadow-sm">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xl font-bold text-primary">{selectedPackage.price}</p>
+              <p className="text-xl font-bold text-primary">${basePrice}</p>
               <div className="flex items-center gap-2">
                 <h3 className="font-bold text-base">{selectedPackage.name}</h3>
                 <span className="text-xl">💎</span>
