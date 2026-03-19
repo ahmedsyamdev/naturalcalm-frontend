@@ -36,7 +36,7 @@ const Subscription = () => {
       'AED': 'د.إ',
       'EGP': 'ج.م',
     };
-    return currencyMap[currency || 'SAR'] || 'ر.س';
+    return currencyMap[currency || 'USD'] || '$';
   };
 
   // Helper function to check package type
