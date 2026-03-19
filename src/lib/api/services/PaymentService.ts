@@ -63,7 +63,7 @@ class PaymentServiceClass extends BaseService {
   }
 
   async getPaymentHistory(): Promise<Payment[]> {
-    const response = await this.get<ApiResponse<Payment[]>>('/payments/history');
+    const response = await this.get<ApiResponse<Payment[]>>('/users/payments/history');
     return response.data;
   }
 }
