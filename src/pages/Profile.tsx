@@ -54,6 +54,11 @@ const Profile = () => {
       onClick: () => setShowEditDialog(true),
     },
     {
+      icon: <span className="text-xl">💎</span>,
+      label: "الباقات",
+      onClick: () => navigate("/subscription"),
+    },
+    {
       icon: <Download className="w-6 h-6" />,
       label: "التنزيلات",
       onClick: () => navigate("/downloads"),
