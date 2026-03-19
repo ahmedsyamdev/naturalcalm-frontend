@@ -8,14 +8,11 @@ import { ArrowRight, Bell, Heart, AlertCircle } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Package } from "@/types";
 import { useValidateCoupon } from "@/hooks/queries/usePayment";
 import { usePackages } from "@/hooks/queries/useSubscription";
 import StripePaymentForm from "@/components/payment/StripePaymentForm";
-import ApplePayButton from "@/components/payment/ApplePayButton";
 
 const Payment = () => {
   const navigate = useNavigate();
@@ -31,19 +28,14 @@ const Payment = () => {
   }, [selectedPackage, packages, navigate]);
 
   const [couponCode, setCouponCode] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"visa" | "apple-pay">("visa");
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number; finalAmount: number } | null>(null);
   const [couponError, setCouponError] = useState<string | null>(null);
 
   const validateCouponMutation = useValidateCoupon();
 
-  // Helper function to safely parse price
   const parsePrice = (price: string | number): number => {
-    if (typeof price === 'number') {
-      return price;
-    }
+    if (typeof price === 'number') return price;
     if (typeof price === 'string') {
-      // Remove non-numeric characters except decimal point
       const cleaned = price.replace(/[^\d.]/g, '');
       return parseFloat(cleaned) || 0;
     }
@@ -93,7 +85,7 @@ const Payment = () => {
               <button className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center">
                 <Heart className="w-4.5 h-4.5 text-primary" />
               </button>
-            <button 
+            <button
               onClick={() => navigate("/notifications")}
               className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center"
             >
@@ -190,73 +182,28 @@ const Payment = () => {
         <div>
           <h2 className="text-lg font-bold mb-3 text-right">طريقة الدفع</h2>
           <div className="bg-white rounded-2xl p-4 shadow-sm">
-            <RadioGroup
-              value={paymentMethod}
-              onValueChange={(value) => setPaymentMethod(value as "visa" | "apple-pay")}
+            <div
+              className="flex items-center justify-between p-3 border-2 border-primary bg-primary/5 rounded-xl"
             >
-              <div className="space-y-3">
-                {/* Visa */}
-                <div
-                  className={`flex items-center justify-between p-3 border-2 rounded-xl cursor-pointer ${
-                    paymentMethod === "visa" ? "border-primary bg-primary/5" : "border-gray-200"
-                  }`}
-                  onClick={() => setPaymentMethod("visa")}
-                >
-                  <RadioGroupItem value="visa" id="visa" />
-                  <Label
-                    htmlFor="visa"
-                    className="flex-1 flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span className="font-medium">فيزا / بطاقة ائتمان</span>
-                    <div className="w-10 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
-                      VISA
-                    </div>
-                  </Label>
-                </div>
-
-                {/* Apple Pay */}
-                <div
-                  className={`flex items-center justify-between p-3 border-2 rounded-xl cursor-pointer ${
-                    paymentMethod === "apple-pay" ? "border-primary bg-primary/5" : "border-gray-200"
-                  }`}
-                  onClick={() => setPaymentMethod("apple-pay")}
-                >
-                  <RadioGroupItem value="apple-pay" id="apple-pay" />
-                  <Label
-                    htmlFor="apple-pay"
-                    className="flex-1 flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span className="font-medium">أبل باي</span>
-                    <svg viewBox="0 0 50 20" xmlns="http://www.w3.org/2000/svg" className="h-6 w-auto">
-                      <path d="M9.1 3.6c.5-.6.8-1.4.7-2.2-.7 0-1.6.5-2.1 1.1-.5.5-.8 1.3-.7 2.1.8 0 1.6-.4 2.1-1z" fill="currentColor"/>
-                      <path d="M9.8 4.7c-1.2-.1-2.2.7-2.7.7-.5 0-1.4-.6-2.3-.6C3.5 4.9 2.2 5.8 1.5 7.2c-1.4 2.4-.4 6 1 8 .7 1 1.5 2.1 2.5 2 1-.1 1.3-.6 2.5-.6 1.2 0 1.5.6 2.5.6 1 0 1.8-1 2.4-2 .8-1.1 1.1-2.2 1.1-2.2s-2.1-.8-2.1-3.1c0-1.9 1.6-2.9 1.6-2.9s-.9-1.3-2.2-1.3z" fill="currentColor"/>
-                      <text x="16" y="15" fontSize="10" fontWeight="600" fill="currentColor" fontFamily="system-ui, -apple-system, sans-serif">Pay</text>
-                    </svg>
-                  </Label>
+              <div className="w-3 h-3 rounded-full bg-primary shrink-0" />
+              <div className="flex-1 flex items-center justify-center gap-2">
+                <span className="font-medium">فيزا / بطاقة ائتمان</span>
+                <div className="w-10 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
+                  VISA
                 </div>
               </div>
-            </RadioGroup>
+            </div>
           </div>
         </div>
 
         {/* Payment Form */}
         <div>
-          {paymentMethod === "visa" ? (
-            <StripePaymentForm
-              packageInfo={selectedPackage}
-              couponCode={appliedCoupon?.code}
-              onSuccess={() => navigate("/payment-success")}
-              onError={(error) => navigate("/payment-failure", { state: { error } })}
-            />
-          ) : (
-            <ApplePayButton
-              packageInfo={selectedPackage}
-              couponCode={appliedCoupon?.code}
-              amount={totalPrice}
-              onSuccess={() => navigate("/payment-success")}
-              onError={(error) => navigate("/payment-failure", { state: { error } })}
-            />
-          )}
+          <StripePaymentForm
+            packageInfo={selectedPackage}
+            couponCode={appliedCoupon?.code}
+            onSuccess={() => navigate("/payment-success")}
+            onError={(error) => navigate("/payment-failure", { state: { error } })}
+          />
         </div>
       </div>
     </div>
@@ -264,4 +211,3 @@ const Payment = () => {
 };
 
 export default Payment;
-
