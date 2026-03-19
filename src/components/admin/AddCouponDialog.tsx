@@ -210,7 +210,7 @@ export function AddCouponDialog({ open, onOpenChange }: AddCouponDialogProps) {
             <div className="space-y-2">
               <Label htmlFor="discountValue" style={{ fontFamily: 'Tajawal' }}>
                 قيمة الخصم *{' '}
-                {formData.discountType === 'percentage' ? '(%)' : '(ر.س)'}
+                {formData.discountType === 'percentage' ? '(%)' : '($)'}
               </Label>
               <Input
                 id="discountValue"

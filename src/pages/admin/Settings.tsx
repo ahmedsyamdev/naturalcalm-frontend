@@ -53,7 +53,7 @@ export function Settings() {
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
   const [storageType, setStorageType] = useState<'local' | 'r2'>('local');
   const [isUpdatingStorage, setIsUpdatingStorage] = useState(false);
-  const [currency, setCurrency] = useState<string>('SAR');
+  const [currency, setCurrency] = useState<string>('USD');
   const [isUpdatingCurrency, setIsUpdatingCurrency] = useState(false);
 
   const {

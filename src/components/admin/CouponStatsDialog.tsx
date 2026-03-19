@@ -100,7 +100,7 @@ export function CouponStatsDialog({
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold text-slate-900" style={{ fontFamily: 'Tajawal' }}>
-                      {stats.totalDiscountGiven.toLocaleString('ar-EG')} ر.س
+                      {stats.totalDiscountGiven.toLocaleString('ar-EG')} $
                     </div>
                   </CardContent>
                 </Card>
@@ -165,7 +165,7 @@ export function CouponStatsDialog({
                             {format(new Date(user.usedAt), 'dd/MM/yyyy HH:mm', { locale: ar })}
                           </TableCell>
                           <TableCell className="text-left font-semibold" style={{ fontFamily: 'Tajawal' }}>
-                            {user.discountAmount.toLocaleString('ar-EG')} ر.س
+                            {user.discountAmount.toLocaleString('ar-EG')} $
                           </TableCell>
                         </TableRow>
                       ))}

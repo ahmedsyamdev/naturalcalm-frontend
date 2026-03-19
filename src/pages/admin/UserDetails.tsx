@@ -1103,7 +1103,7 @@ export default function UserDetails() {
                           const pkgId = pkg._id || pkg.id;
                           return (
                             <SelectItem key={pkgId} value={pkgId}>
-                              {pkg.name} - {pkg.price} {pkg.currency || 'ج.م'}
+                              {pkg.name} - ${pkg.price}
                               {pkg.durationDays && ` / ${pkg.durationDays} يوم`}
                               {!pkg.durationDays && pkg.period && ` / ${pkg.period}`}
                             </SelectItem>

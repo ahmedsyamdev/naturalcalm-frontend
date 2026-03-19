@@ -67,7 +67,7 @@ export function RevenueChart() {
             {formatDate(payload[0].payload.date)}
           </p>
           <p className="text-sm text-green-600" style={{ fontFamily: 'Tajawal' }}>
-            الإيرادات: {payload[0].value.toLocaleString('ar-EG')} ر.س
+            الإيرادات: {payload[0].value.toLocaleString('ar-EG')} $
           </p>
           <p className="text-sm text-blue-600" style={{ fontFamily: 'Tajawal' }}>
             الاشتراكات: {payload[1].value.toLocaleString('ar-EG')}
@@ -175,7 +175,7 @@ export function RevenueChart() {
                   wrapperStyle={{ fontFamily: 'Tajawal', fontSize: 14 }}
                   iconType="circle"
                   formatter={(value) => {
-                    if (value === 'revenue') return 'الإيرادات (ر.س)';
+                    if (value === 'revenue') return 'الإيرادات ($)';
                     if (value === 'subscriptions') return 'الاشتراكات';
                     return value;
                   }}

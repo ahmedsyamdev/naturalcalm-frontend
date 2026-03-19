@@ -113,7 +113,7 @@ export function EditPackageDialog({ package: pkg, open, onOpenChange }: EditPack
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="price" style={{ fontFamily: 'Tajawal' }}>
-                السعر (ر.س)
+                السعر ($)
               </Label>
               <Input
                 id="price"

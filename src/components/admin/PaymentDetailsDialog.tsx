@@ -167,7 +167,7 @@ export function PaymentDetailsDialog({ payment, open, onOpenChange }: PaymentDet
                 <div className="flex justify-between">
                   <span className="text-sm text-slate-600" style={{ fontFamily: 'Tajawal' }}>المبلغ الأصلي:</span>
                   <span className="text-sm font-medium" style={{ fontFamily: 'Tajawal' }}>
-                    {payment.originalAmount.toLocaleString('ar-EG')} ر.س
+                    {payment.originalAmount.toLocaleString('ar-EG')} $
                   </span>
                 </div>
                 {payment.discountAmount && payment.discountAmount > 0 && (
@@ -175,7 +175,7 @@ export function PaymentDetailsDialog({ payment, open, onOpenChange }: PaymentDet
                     <div className="flex justify-between text-green-600">
                       <span className="text-sm" style={{ fontFamily: 'Tajawal' }}>الخصم:</span>
                       <span className="text-sm font-medium" style={{ fontFamily: 'Tajawal' }}>
-                        - {payment.discountAmount.toLocaleString('ar-EG')} ر.س
+                        - {payment.discountAmount.toLocaleString('ar-EG')} $
                       </span>
                     </div>
                     {payment.coupon && (
@@ -192,7 +192,7 @@ export function PaymentDetailsDialog({ payment, open, onOpenChange }: PaymentDet
                 <div className="flex justify-between">
                   <span className="text-sm font-semibold text-slate-700" style={{ fontFamily: 'Tajawal' }}>المبلغ المدفوع:</span>
                   <span className="text-base font-bold text-primary" style={{ fontFamily: 'Tajawal' }}>
-                    {payment.amount.toLocaleString('ar-EG')} ر.س
+                    {payment.amount.toLocaleString('ar-EG')} $
                   </span>
                 </div>
               </div>

@@ -51,7 +51,7 @@ export default function RevenueChart() {
   const formatCurrency = (value: number): string => {
     return value.toLocaleString('ar-SA', {
       style: 'currency',
-      currency: 'SAR',
+      currency: 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
@@ -162,7 +162,7 @@ export default function RevenueChart() {
                 <YAxis
                   stroke="#64748b"
                   style={{ fontFamily: 'Tajawal', fontSize: '12px' }}
-                  tickFormatter={(value) => `${value.toLocaleString('ar-SA')} ر.س`}
+                  tickFormatter={(value) => `$${value.toLocaleString('en-US')}`}
                 />
                 <Tooltip
                   contentStyle={{

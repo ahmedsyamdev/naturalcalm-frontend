@@ -35,7 +35,7 @@ export default function Packages() {
 
   const formatPrice = (price: string | number) => {
     const numPrice = typeof price === 'string' ? parseFloat(price) : price;
-    return `${numPrice.toLocaleString('ar-EG')} ر.س`;
+    return `$${numPrice.toLocaleString('en-US')}`;
   };
 
   return (

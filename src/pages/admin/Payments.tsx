@@ -318,10 +318,10 @@ export default function Payments() {
                     </TableCell>
                     <TableCell style={{ fontFamily: 'Tajawal' }}>
                       <div>
-                        <div className="font-semibold">{payment.amount.toLocaleString('ar-EG')} ر.س</div>
+                        <div className="font-semibold">{payment.amount.toLocaleString('ar-EG')} $</div>
                         {payment.discountAmount && payment.discountAmount > 0 && (
                           <div className="text-xs text-green-600">
-                            خصم: {payment.discountAmount.toLocaleString('ar-EG')} ر.س
+                            خصم: {payment.discountAmount.toLocaleString('ar-EG')} $
                           </div>
                         )}
                       </div>

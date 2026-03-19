@@ -280,7 +280,7 @@ export default function CouponsManagement() {
                     <TableCell style={{ fontFamily: 'Tajawal' }}>
                       {coupon.discountType === 'percentage'
                         ? `${coupon.discountValue}%`
-                        : `${coupon.discountValue} ر.س`}
+                        : `$${coupon.discountValue}`}
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1">

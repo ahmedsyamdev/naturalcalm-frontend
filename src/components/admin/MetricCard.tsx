@@ -33,7 +33,7 @@ export default function MetricCard({
     if (format === 'currency') {
       return val.toLocaleString('ar-SA', {
         style: 'currency',
-        currency: 'SAR',
+        currency: 'USD',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
       });
