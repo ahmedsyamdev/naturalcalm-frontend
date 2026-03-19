@@ -29,6 +29,7 @@ interface AudioPlayerContextType {
   setVolume: (volume: number) => void;
   setPlaybackSpeed: (speed: number) => void;
   retryStream: () => void;
+  closePlayer: () => void;
 }
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
@@ -219,7 +220,10 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         } catch (preloadError) {
           console.warn('Failed to preload next track:', preloadError);
         }
-      } catch (error) {
+      } catch (error: unknown) {
+        if ((error as { name?: string })?.name === 'AbortError') {
+          return;
+        }
         console.error('Failed to play track:', error);
         setStreamError('فشل تشغيل المقطع');
         setIsPlaying(false);
@@ -291,6 +295,23 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       setStreamError(null);
       playTrack(currentTrack, playlist, currentProgramIdRef.current || undefined);
     }
+  };
+
+  const closePlayer = async () => {
+    await cleanupSession();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = '';
+    }
+    setCurrentTrack(null);
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+    setPlaylist([]);
+    setCurrentTrackIndex(0);
+    setCurrentProgramId(null);
+    setStreamError(null);
+    currentProgramIdRef.current = null;
   };
 
   useEffect(() => {
@@ -386,6 +407,7 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
         setVolume,
         setPlaybackSpeed,
         retryStream,
+        closePlayer,
       }}
     >
       {children}

@@ -24,6 +24,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
+const isMongoId = (value: string) => /^[a-f\d]{24}$/i.test(value);
+
+const getCategoryName = (category: unknown): string => {
+  if (!category) return '';
+  if (typeof category === 'string') return isMongoId(category) ? '' : category;
+  if (typeof category === 'object' && category !== null) {
+    return (category as { name?: string }).name || '';
+  }
+  return '';
+};
+
 const TrackPlayer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -254,11 +265,11 @@ const TrackPlayer = () => {
             <div className="flex items-center gap-2 justify-center text-sm opacity-90">
               <span className="bg-white/10 backdrop-blur-xl px-3 py-1 rounded-full border border-white/20">{displayTrack?.level}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
-              <span className="bg-white/10 backdrop-blur-xl px-3 py-1 rounded-full border border-white/20">
-                {typeof displayTrack?.category === 'string'
-                  ? displayTrack.category
-                  : (displayTrack?.category as any)?.name || ''}
-              </span>
+              {getCategoryName(displayTrack?.category) && (
+                <span className="bg-white/10 backdrop-blur-xl px-3 py-1 rounded-full border border-white/20">
+                  {getCategoryName(displayTrack?.category)}
+                </span>
+              )}
             </div>
           </div>
 
@@ -406,9 +417,7 @@ const TrackPlayer = () => {
                         {track.title}
                       </p>
                       <p className="text-xs text-white/60 truncate">
-                        {typeof track.category === 'string'
-                          ? track.category
-                          : (track.category as any)?.name || ''}
+                        {getCategoryName(track.category)}
                       </p>
                     </div>
 

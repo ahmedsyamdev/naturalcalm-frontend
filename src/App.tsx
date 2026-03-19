@@ -50,6 +50,7 @@ import AdminPayments from "./pages/admin/Payments";
 import AdminNotifications from "./pages/admin/Notifications";
 import AdminSettings from "./pages/admin/Settings";
 import { FCMInitializer } from "./components/FCMInitializer";
+import MiniPlayer from "./components/MiniPlayer";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -71,6 +72,7 @@ const App = () => (
             <Sonner />
             <FCMInitializer />
             <BrowserRouter>
+              <MiniPlayer />
               <Routes>
                 <Route path="/" element={<Splash />} />
                 <Route path="/login" element={<Login />} />
