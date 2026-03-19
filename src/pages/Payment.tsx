@@ -227,9 +227,11 @@ const Payment = () => {
                     className="flex-1 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span className="font-medium">أبل باي</span>
-                    <div className="w-10 h-10">
-                      <span className="text-2xl">🍎</span>
-                    </div>
+                    <svg viewBox="0 0 50 20" xmlns="http://www.w3.org/2000/svg" className="h-6 w-auto">
+                      <path d="M9.1 3.6c.5-.6.8-1.4.7-2.2-.7 0-1.6.5-2.1 1.1-.5.5-.8 1.3-.7 2.1.8 0 1.6-.4 2.1-1z" fill="currentColor"/>
+                      <path d="M9.8 4.7c-1.2-.1-2.2.7-2.7.7-.5 0-1.4-.6-2.3-.6C3.5 4.9 2.2 5.8 1.5 7.2c-1.4 2.4-.4 6 1 8 .7 1 1.5 2.1 2.5 2 1-.1 1.3-.6 2.5-.6 1.2 0 1.5.6 2.5.6 1 0 1.8-1 2.4-2 .8-1.1 1.1-2.2 1.1-2.2s-2.1-.8-2.1-3.1c0-1.9 1.6-2.9 1.6-2.9s-.9-1.3-2.2-1.3z" fill="currentColor"/>
+                      <text x="16" y="15" fontSize="10" fontWeight="600" fill="currentColor" fontFamily="system-ui, -apple-system, sans-serif">Pay</text>
+                    </svg>
                   </Label>
                 </div>
               </div>
