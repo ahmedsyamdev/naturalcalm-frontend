@@ -60,6 +60,7 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const streamUrlExpiry = useRef<number | null>(null);
   const sessionUpdateInterval = useRef<NodeJS.Timeout | null>(null);
   const preloadAudioRef = useRef<HTMLAudioElement | null>(null);
+  const isIntentionallyClosing = useRef(false);
 
   const { toast } = useToast();
 
@@ -298,11 +299,14 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
   };
 
   const closePlayer = async () => {
+    isIntentionallyClosing.current = true;
     await cleanupSession();
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = '';
+      audioRef.current.load();
     }
+    setTimeout(() => { isIntentionallyClosing.current = false; }, 200);
     setCurrentTrack(null);
     setIsPlaying(false);
     setCurrentTime(0);
@@ -339,6 +343,7 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
       });
 
       audioRef.current.addEventListener("error", (error: Event) => {
+        if (isIntentionallyClosing.current) return;
         const audioError = (error.target as HTMLAudioElement).error;
         const errorMessage = audioError
           ? `خطأ في التحميل (${audioError.code})`
