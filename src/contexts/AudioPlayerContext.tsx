@@ -8,7 +8,7 @@ import { Track } from "@/types";
 import { AudioService } from "@/lib/api/services/AudioService";
 import { useToast } from "@/hooks/use-toast";
 import { downloadService } from "@/lib/downloadService";
-import logoImg from "@/assets/N.C-con2.png";
+import mediaArtwork from "@/assets/media-artwork.png";
 
 interface AudioPlayerContextType {
   currentTrack: Track | null;
@@ -211,7 +211,7 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
             artist: 'Naturacalm',
             album: track.category || '',
             artwork: [
-              { src: track.imageUrl || logoImg, sizes: '512x512', type: 'image/png' },
+              { src: track.imageUrl || mediaArtwork, sizes: '512x512', type: 'image/png' },
             ],
           });
           navigator.mediaSession.setActionHandler('play', () => resumeTrack());
