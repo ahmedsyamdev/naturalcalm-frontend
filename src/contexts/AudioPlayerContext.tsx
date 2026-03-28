@@ -8,6 +8,7 @@ import { Track } from "@/types";
 import { AudioService } from "@/lib/api/services/AudioService";
 import { useToast } from "@/hooks/use-toast";
 import { downloadService } from "@/lib/downloadService";
+import logoImg from "@/assets/N.C-con2.png";
 
 interface AudioPlayerContextType {
   currentTrack: Track | null;
@@ -203,6 +204,21 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
         await audioRef.current.play();
         setIsPlaying(true);
+
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: track.title,
+            artist: 'Naturacalm',
+            album: track.category || '',
+            artwork: [
+              { src: track.imageUrl || logoImg, sizes: '512x512', type: 'image/png' },
+            ],
+          });
+          navigator.mediaSession.setActionHandler('play', () => resumeTrack());
+          navigator.mediaSession.setActionHandler('pause', () => pauseTrack());
+          navigator.mediaSession.setActionHandler('previoustrack', () => previousTrack());
+          navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
+        }
 
         try {
           const session = await AudioService.startSession({
