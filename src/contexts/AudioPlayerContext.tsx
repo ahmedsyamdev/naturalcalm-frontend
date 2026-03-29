@@ -211,6 +211,11 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
             artist: 'Naturacalm',
             album: track.category || '',
             artwork: [
+              { src: track.imageUrl || mediaArtwork, sizes: '96x96', type: 'image/png' },
+              { src: track.imageUrl || mediaArtwork, sizes: '128x128', type: 'image/png' },
+              { src: track.imageUrl || mediaArtwork, sizes: '192x192', type: 'image/png' },
+              { src: track.imageUrl || mediaArtwork, sizes: '256x256', type: 'image/png' },
+              { src: track.imageUrl || mediaArtwork, sizes: '384x384', type: 'image/png' },
               { src: track.imageUrl || mediaArtwork, sizes: '512x512', type: 'image/png' },
             ],
           });
@@ -218,6 +223,17 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
           navigator.mediaSession.setActionHandler('pause', () => pauseTrack());
           navigator.mediaSession.setActionHandler('previoustrack', () => previousTrack());
           navigator.mediaSession.setActionHandler('nexttrack', () => nextTrack());
+          navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+            const skipTime = details.seekOffset || 10;
+            if (audioRef.current) seekTo(Math.max(audioRef.current.currentTime - skipTime, 0));
+          });
+          navigator.mediaSession.setActionHandler('seekforward', (details) => {
+            const skipTime = details.seekOffset || 10;
+            if (audioRef.current) seekTo(Math.min(audioRef.current.currentTime + skipTime, audioRef.current.duration));
+          });
+          navigator.mediaSession.setActionHandler('seekto', (details) => {
+            if (details.seekTime != null) seekTo(details.seekTime);
+          });
         }
 
         try {
@@ -340,6 +356,13 @@ export const AudioPlayerProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
       audioRef.current.addEventListener("timeupdate", () => {
         setCurrentTime(audioRef.current?.currentTime || 0);
+        if ('mediaSession' in navigator && audioRef.current) {
+          navigator.mediaSession.setPositionState({
+            duration: audioRef.current.duration || 0,
+            playbackRate: audioRef.current.playbackRate,
+            position: audioRef.current.currentTime || 0,
+          });
+        }
       });
 
       audioRef.current.addEventListener("loadedmetadata", () => {
