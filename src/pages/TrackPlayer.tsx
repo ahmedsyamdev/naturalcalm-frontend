@@ -174,9 +174,9 @@ const TrackPlayer = () => {
   }
 
   return (
-    <div className="flex flex-col relative overflow-hidden bg-black" style={{ minHeight: '100dvh' }} dir="rtl">
+    <div className="min-h-screen flex flex-col relative overflow-hidden bg-black" dir="rtl">
       {/* Background Image with Overlay */}
-      <div className="fixed inset-0">
+      <div className="absolute inset-0">
         <img
           src={displayTrack?.imageUrl}
           alt={displayTrack?.title}
@@ -237,7 +237,7 @@ const TrackPlayer = () => {
       </div>
 
       {/* Player Controls */}
-      <div className="px-5 pb-8 relative z-10" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
+      <div className="px-5 pb-8 relative z-10">
         <div className="bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-2xl rounded-[2rem] p-6 border border-white/25 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]">
           {/* Stream Error */}
           {streamError && (
