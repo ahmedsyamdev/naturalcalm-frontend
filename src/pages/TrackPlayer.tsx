@@ -174,9 +174,9 @@ const TrackPlayer = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden bg-black" dir="rtl">
+    <div className="flex flex-col relative overflow-hidden bg-black" style={{ minHeight: '100dvh' }} dir="rtl">
       {/* Background Image with Overlay */}
-      <div className="absolute inset-0">
+      <div className="fixed inset-0">
         <img
           src={displayTrack?.imageUrl}
           alt={displayTrack?.title}
