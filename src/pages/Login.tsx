@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { validateEmail, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
 import { ApiError } from "@/lib/api/types";
 import { getAuthToken } from "@/lib/api/tokens";
+import SocialLoginButtons from "@/components/SocialLoginButtons";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -157,6 +158,8 @@ const Login = () => {
                 "تسجيل الدخول"
               )}
             </Button>
+
+            <SocialLoginButtons />
 
             {/* Sign Up Link */}
             <div className="text-center text-sm">

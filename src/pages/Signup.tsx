@@ -8,6 +8,7 @@ import AuthService from "@/lib/api/services/AuthService";
 import { validateEmail, validatePassword, getAuthErrorMessage, VALIDATION_MESSAGES } from "@/lib/api/auth-errors";
 import { ApiError } from "@/lib/api/types";
 import { getAuthToken } from "@/lib/api/tokens";
+import SocialLoginButtons from "@/components/SocialLoginButtons";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -164,6 +165,8 @@ const Signup = () => {
                 "انشاء حساب"
               )}
             </Button>
+
+            <SocialLoginButtons />
 
             {/* Login Link */}
             <div className="text-center text-sm">
