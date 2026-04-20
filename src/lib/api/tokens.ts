@@ -40,6 +40,9 @@ export function getRememberMe(): boolean {
 export function setAuthToken(token: string): void {
   const storage = getStorage();
   storage.setItem(AUTH_TOKEN_KEY, token);
+  import('@/lib/firebase/flutterBridge')
+    .then((m) => m.flushPendingFlutterFCM())
+    .catch(() => {});
 }
 
 /**

@@ -97,8 +97,16 @@ class NotificationsServiceClass extends BaseService {
   /**
    * Register device for push notifications (FCM)
    */
-  async registerDevice(token: string): Promise<void> {
-    await this.post<ApiResponse<void>>('/notifications/register-device', { token });
+  async registerDevice(
+    fcmToken: string,
+    platform: 'web' | 'mobile' = 'web',
+    browser?: string
+  ): Promise<void> {
+    await this.post<ApiResponse<void>>('/notifications/register-device', {
+      fcmToken,
+      platform,
+      browser: browser ?? (typeof navigator !== 'undefined' ? navigator.userAgent : undefined),
+    });
   }
 }
 
