@@ -1,11 +1,18 @@
-[phases.build]
-cmds = ["npm run build"]
-
-[phases.install]
-cmds = ["npm ci"]
-
-[start]
-cmd = "npx serve -s dist -l 4173"
+providers = ['node']
 
 [variables]
-NODE_ENV = "production"
+NODE_ENV = 'production'
+CI = 'true'
+
+[phases.setup]
+nixPkgs = ['nodejs_20', 'npm-10_x']
+nixpkgsArchive = '31fb21469e34b6b5c7be77b9a35bae43d0c598e9'
+
+[phases.install]
+cmds = ['npm ci --include=dev']
+
+[phases.build]
+cmds = ['npm run build']
+
+[start]
+cmd = 'npx serve -s dist -l 4173'
